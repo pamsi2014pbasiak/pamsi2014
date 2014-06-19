@@ -14,6 +14,61 @@ Game::Game()
 	_firstPlayer = true;
 }
 
+void Game::getBestMoveValue(int & bestMove){
+	int m, mm;
+	int deep = 0;
+	mm = 2;
+	if(!_firstMove){
+		_firstMove=1;
+		bestMove = -1;
+		return;
+	}
+	for(int i=0; i<64; i++){ // Petla przechodz¹ca przez wszystkie pola
+		if(makeMove(i)){	// Je¿eli uda³o siê wykonaæ ruch...
+			m = minimax(*this, deep);	// Wyznacz minimax
+			undoMove(i);	// Cofnij zmiany
+			if(m < mm){	// Je¿eli nowy minimax mniejszy od poprzedniego...
+				mm = m;	// zapisz nowy
+				bestMove = i;	// zaktualizuj najlepszy ruch
+			} // IF (m > max)
+		} // IF (pole puste)
+	} // FOR 0-63
+}
+
+int minimax(Game & _game, int deep){
+	int m, mm;
+	if(_game.getResult()){
+		if(_game.getResult() == 3)
+			return 0;
+		if(_game.getResult() == 1)
+			return -1;
+		return 1;
+	}
+	if(deep >= DEEP)
+		return 0;
+	if(_game.getPlayer() == 1)
+		mm = 2;
+	else
+		mm = -2;
+	for(int i=0; i<64; i++){ // Petla przechodz¹ca przez wszystkie pola
+		if(_game.makeMove(i)){	// Je¿eli uda³o siê wykonaæ ruch...
+			m = minimax(_game, deep+1);	// Wyznacz minimax
+			_game.undoMove(i);	// Cofnij zmiany
+			if(_game.getPlayer() == 1){
+				if(m < mm){
+					mm = m;
+				}
+			}
+			else if(_game.getPlayer() == 2){
+				if(m > mm){
+					mm = m;
+				}
+			}				
+		} // IF (pole puste)
+	} // FOR 0-63
+	return mm;
+}
+
 int Game::getPlayer()
 {
 	return _firstPlayer?1:2;

@@ -13,4 +13,3 @@ public:
 	void CPUmove(int lvl);
 };
 
-int minimax(Game & _game, int & deep);

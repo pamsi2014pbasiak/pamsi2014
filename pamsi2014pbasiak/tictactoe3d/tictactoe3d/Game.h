@@ -1,5 +1,6 @@
 #pragma once
 
+#define DEEP 2
 
 class Game
 {
@@ -17,3 +18,5 @@ public:
 	void getBestMoveValue(int & bestMove);
 
 };
+
+int minimax(Game & _game, int deep);
